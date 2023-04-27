@@ -1,14 +1,61 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/Home.css";
-import data from "../flight.json";
+import axios from "axios";
+import Loading from "../components/loading";
 
 const Home = ({ isLogin }) => {
   const navigate = useNavigate();
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     !isLogin && navigate("/login");
   }, [isLogin, navigate]);
+
+  useEffect(() => {
+    if (data.length < 1) {
+      const airportAbbreviations = {
+        Brisbane: "BNE",
+        Melbourne: "MEL",
+        Sydney: "SYD",
+        Ballina: "BNK",
+      };
+
+      axios
+        .get("https://opensky-network.org/api/states/all")
+        .then((response) => {
+          const data = response.data.states;
+          const flights = data.map((state) => {
+            const arrivalAirport = state[2];
+            const departureAirport = state[3];
+            const time = new Date(state[4] * 1000).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+              timeZone: "America/Chicago",
+            });
+            const id = state[0];
+            const arriving =
+              airportAbbreviations[arrivalAirport] || arrivalAirport;
+            const departing =
+              airportAbbreviations[departureAirport] || departureAirport;
+
+            return {
+              id: id,
+              arriving: arriving,
+              time: time,
+              airport: `${arriving} `,
+              departing: departing,
+            };
+          });
+
+          setData(flights);
+          setLoading(false);
+        })
+        .catch((error) => console.error(error));
+    }
+  }, [data]);
 
   const timeOptions = {
     hour: "numeric",
@@ -29,7 +76,7 @@ const Home = ({ isLogin }) => {
   return (
     <main>
       <header>
-        <h1>DEPARTURES</h1>
+        <h1>DASHBOARD</h1>
         <div className="p">
           {formattedDate} <p> {time}</p>
         </div>
@@ -38,49 +85,52 @@ const Home = ({ isLogin }) => {
         <table>
           <thead>
             <tr>
-              <th>Flight No.</th>
-              <th>From</th>
-              <th>Scheduled</th>
-              <th>Estimated</th>
-              <th>Status</th>
+              <th>Airport</th>
+              <th>Time</th>
+              <th>Arriving</th>
+              <th>Departing</th>
             </tr>
           </thead>
-          <tbody>
-            {data.map((dt) => (
-              <tr key={Math.floor(Math.random() * 1000)}>
-                <td
+          {loading ? (
+            <Loading />
+          ) : (
+            <tbody>
+              {data.map((dt, index) => (
+                <tr key={index}>
+                  <td
+                    data-label="ID"
+                    // className={`${dt.status === "Cancelled" && "status"}`}
+                  >
+                    {dt.airport}
+                  </td>
+                  {/* <td
                   data-label="ID"
-                  className={`${dt.status === "Cancelled" && "status"}`}
-                >
-                  {dt.flight_no}
-                </td>
-                <td
-                  data-label="ID"
-                  className={`${dt.status === "Cancelled" && "status"}`}
+                  // className={`${dt.status === "Cancelled" && "status"}`}
                 >
                   {dt.from}
-                </td>
-                <td
-                  data-label="ID"
-                  className={`${dt.status === "Cancelled" && "status"}`}
-                >
-                  {dt.scheduled}
-                </td>
-                <td
-                  data-label="ID"
-                  className={`${dt.status === "Cancelled" && "status"}`}
-                >
-                  {dt.estimated}
-                </td>
-                <td
-                  data-label="ID"
-                  className={`${dt.status === "Cancelled" && "status"}`}
-                >
-                  {dt.status}
-                </td>
-              </tr>
-            ))}
-          </tbody>
+                </td> */}
+                  <td
+                    data-label="ID"
+                    // className={`${dt.status === "Cancelled" && "status"}`}
+                  >
+                    {dt.time}
+                  </td>
+                  <td
+                    data-label="ID"
+                    // className={`${dt.status === "Cancelled" && "status"}`}
+                  >
+                    {dt.arriving}
+                  </td>
+                  <td
+                    data-label="ID"
+                    // className={`${dt.status === "Cancelled" && "status"}`}
+                  >
+                    {dt.departing}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
         </table>
       </div>
     </main>

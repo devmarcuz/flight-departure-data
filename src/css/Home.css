@@ -19,12 +19,13 @@ main .container {
   width: 100%;
   padding: 0 30px;
   margin-top: 20px;
-  margin-bottom:40px;
+  margin-bottom: 40px;
 }
 main .container table {
   border-collapse: collapse;
   width: 100%;
   color: white;
+  position: relative;
 }
 main .container table thead tr th {
   background-color: rgb(33, 148, 168);
