@@ -34,6 +34,7 @@ const Login = ({ isLogin, setIsLogin }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    console.log(isEmail(email));
 
     if (!isEmail(email)) {
       toast.error("Invalid email", toastOptions);

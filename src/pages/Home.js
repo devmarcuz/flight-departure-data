@@ -47,7 +47,7 @@ const Home = ({ isLogin }) => {
           </thead>
           <tbody>
             {data.map((dt) => (
-              <tr>
+              <tr key={Math.floor(Math.random() * 1000)}>
                 <td
                   data-label="ID"
                   className={`${dt.status === "Cancelled" && "status"}`}
