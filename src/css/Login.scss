@@ -84,6 +84,51 @@
         color: rgb(136, 136, 136);
       }
 
+      .google-btn {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 35px;
+        background-color: #4285f4;
+        border-radius: 2px;
+        transition: 0.1s all ease-in;
+        box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.25);
+      }
+
+      .google-btn .google-icon-wrapper {
+        margin: 1px;
+        width: 40px;
+        height: 33px;
+        border-radius: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+      }
+
+      .google-btn .google-icon {
+        width: 18px;
+        height: 18px;
+      }
+
+      .google-btn .btn-text {
+        color: white;
+        font-size: 16px;
+        letter-spacing: 0.2px;
+        margin-left: 8px;
+        margin-bottom: 12px;
+        font-family: "poppins";
+      }
+
+      .google-btn:hover {
+        box-shadow: 0 0 6px #4285f4;
+      }
+
+      .google-btn:active {
+        background: #1669f2;
+      }
+
       button {
         background: rgb(53, 225, 255);
         padding: 10px 0;
@@ -107,7 +152,7 @@
       }
 
       span a {
-        color: var(--logo);
+        color: rgb(35, 159, 180);
         font-weight: bold;
       }
     }

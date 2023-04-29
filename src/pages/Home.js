@@ -2,16 +2,23 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../css/Home.css";
 import axios from "axios";
-import Loading from "../components/loading";
+import Table from "../components/Table";
+import Pagination from "../components/Pagination";
+import { ImAirplane } from "react-icons/im";
+import { BiPowerOff } from "react-icons/bi";
 
-const Home = ({ isLogin }) => {
+const Home = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(8);
 
   useEffect(() => {
-    !isLogin && navigate("/login");
-  }, [isLogin, navigate]);
+    if (!localStorage.getItem("flight-departure-user")) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     if (data.length < 1) {
@@ -57,6 +64,18 @@ const Home = ({ isLogin }) => {
     }
   }, [data]);
 
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const [currentPosts, setCurrentPosts] = useState([]);
+
+  useEffect(() => {
+    setCurrentPosts([...data.slice(indexOfFirstPost, indexOfLastPost)]);
+  }, [data, indexOfLastPost, indexOfFirstPost]);
+
+  const paginate = (number) => {
+    setCurrentPage(number);
+  };
+
   const timeOptions = {
     hour: "numeric",
     minute: "numeric",
@@ -73,66 +92,37 @@ const Home = ({ isLogin }) => {
 
   const time = new Date().toLocaleTimeString(navigator.language, timeOptions);
 
+  const logout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
+
   return (
     <main>
       <header>
         <h1>DASHBOARD</h1>
-        <div className="p">
-          {formattedDate} <p> {time}</p>
+        <div className="welcome">
+          <ImAirplane />
+          <p>Check-in</p>
+        </div>
+        <div className="end">
+          <div className="p">
+            {formattedDate} <p> {time}</p>
+          </div>
+          <button className="logout" onClick={logout}>
+            <BiPowerOff />
+          </button>
         </div>
       </header>
       <div className="container">
-        <table>
-          <thead>
-            <tr>
-              <th>Airport</th>
-              <th>Time</th>
-              <th>Arriving</th>
-              <th>Departing</th>
-            </tr>
-          </thead>
-          {loading ? (
-            <Loading />
-          ) : (
-            <tbody>
-              {data.map((dt, index) => (
-                <tr key={index}>
-                  <td
-                    data-label="ID"
-                    // className={`${dt.status === "Cancelled" && "status"}`}
-                  >
-                    {dt.airport}
-                  </td>
-                  {/* <td
-                  data-label="ID"
-                  // className={`${dt.status === "Cancelled" && "status"}`}
-                >
-                  {dt.from}
-                </td> */}
-                  <td
-                    data-label="ID"
-                    // className={`${dt.status === "Cancelled" && "status"}`}
-                  >
-                    {dt.time}
-                  </td>
-                  <td
-                    data-label="ID"
-                    // className={`${dt.status === "Cancelled" && "status"}`}
-                  >
-                    {dt.arriving}
-                  </td>
-                  <td
-                    data-label="ID"
-                    // className={`${dt.status === "Cancelled" && "status"}`}
-                  >
-                    {dt.departing}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          )}
-        </table>
+        <Table loading={loading} currentPosts={currentPosts} />
       </div>
+      <Pagination
+        postsPerPage={postsPerPage}
+        totalUsers={data.length}
+        paginate={paginate}
+        currentPage={currentPage}
+      />
     </main>
   );
 };

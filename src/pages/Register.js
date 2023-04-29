@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import isEmpty from "validator/lib/isEmpty";
+import isEmail from "validator/lib/isEmail";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../css/Login.css";
 import axios from "axios";
-import { loginUserApi } from "../api/ApiRoutes";
+import { addUserApi } from "../api/ApiRoutes";
 import Loading from "../components/loading";
 
-const Login = ({ socket }) => {
+const Register = () => {
   const [formData, setFormData] = useState({
     username: "",
+    email: "",
     password: "",
+    confirmPassword: "",
   });
   const [loading, setLoading] = useState(false);
 
-  const { username, password } = formData;
+  const { username, email, password, confirmPassword } = formData;
 
   const navigate = useNavigate();
 
@@ -41,14 +44,31 @@ const Login = ({ socket }) => {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    if (isEmpty(username) || isEmpty(password)) {
+    if (
+      isEmpty(username) ||
+      isEmpty(email) ||
+      isEmpty(password) ||
+      isEmpty(confirmPassword)
+    ) {
       toast.error("All fields are required", toastOptions);
+      return false;
+    } else if (username.length < 3) {
+      toast.error("Username length too short");
+      return false;
+    } else if (password.length < 8) {
+      toast.error("Password length too short");
+      return false;
+    } else if (!isEmail(email)) {
+      toast.error("Enter a valid email", toastOptions);
+      return false;
+    } else if (password !== confirmPassword) {
+      toast.error("Password doesn't match", toastOptions);
       return false;
     } else {
       setLoading(true);
 
       axios
-        .post(loginUserApi, { username, password })
+        .post(addUserApi, { username, email, password })
         .then((res) => {
           if (!res.data.status) {
             toast.error(res.data.msg, toastOptions);
@@ -58,11 +78,16 @@ const Login = ({ socket }) => {
               "flight-departure-user",
               JSON.stringify(res.data.user)
             );
+
             navigate("/");
+
             setFormData({
               username: "",
               password: "",
+              confirmPassword: "",
+              email: "",
             });
+            setLoading(false);
           }
         })
         .catch((err) => {
@@ -71,7 +96,6 @@ const Login = ({ socket }) => {
             setLoading(true);
             return err;
           } else {
-            console.log(err);
             toast.error("Server error", toastOptions);
             setLoading(true);
             return err;
@@ -85,7 +109,6 @@ const Login = ({ socket }) => {
       <div className="form-container">
         <h1 className="logo">Flight Departures</h1>
         {loading && <Loading />}
-
         <form onSubmit={onSubmit}>
           <input
             type="text"
@@ -95,20 +118,34 @@ const Login = ({ socket }) => {
             value={username}
           />
           <input
+            type="email"
+            placeholder="Email"
+            name="email"
+            onChange={handleChange}
+            value={email}
+          />
+          <input
             type="password"
             placeholder="Password"
             name="password"
             onChange={handleChange}
             value={password}
           />
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            name="confirmPassword"
+            onChange={handleChange}
+            value={confirmPassword}
+          />
           <button type="submit" className="submit-btn">
-            Log In
+            Register
           </button>
         </form>
         <p>
-          Don't have an account?{" "}
+          Already have an account?{" "}
           <span>
-            <Link to="/register">Sign Up</Link>
+            <Link to="/login">Login</Link>
           </span>
         </p>
       </div>
@@ -117,4 +154,4 @@ const Login = ({ socket }) => {
   );
 };
 
-export default Login;
+export default Register;

@@ -11,9 +11,40 @@ main header h1 {
   color: rgb(53, 225, 255);
   font-size: 25px;
 }
-main header .p {
+main header .welcome {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 30px;
+  color: rgb(53, 225, 255);
+}
+main header .welcome p {
+  padding-left: 10px;
+  font-size: 16px;
+  color: rgb(235, 235, 235);
+}
+main header .end {
+  display: flex;
+}
+main header .end .p {
   color: rgb(53, 225, 255);
   font-size: 16px;
+  margin-right: 20px;
+}
+main header .end .logout {
+  background-color: rgb(57, 218, 247);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  outline: none;
+}
+main header .end .logout svg {
+  color: white;
+  margin: 10px;
+  font-size: 20px;
 }
 main .container {
   width: 100%;
