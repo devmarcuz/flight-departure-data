@@ -7,12 +7,6 @@ main {
     align-items: center;
     padding: 15px 20px;
 
-    @media screen and (max-width: 500px) {
-      h1 {
-        font-size: 11px;
-      }
-    }
-
     h1 {
       color: rgb(53, 225, 255);
       font-size: 25px;
@@ -34,12 +28,6 @@ main {
 
     .end {
       display: flex;
-
-      @media screen and (max-width: 500px) {
-        .p {
-          display: none;
-        }
-      }
 
       .p {
         color: rgb(53, 225, 255);
@@ -157,6 +145,26 @@ main {
       tr {
         td {
           padding: 5px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  main {
+    header {
+      h1 {
+        font-size: 18px;
+      }
+
+      .welcome {
+        display: none;
+      }
+
+      .end {
+        .p {
+          font-size: 12px;
         }
       }
     }

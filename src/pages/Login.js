@@ -8,7 +8,7 @@ import axios from "axios";
 import { loginUserApi } from "../api/ApiRoutes";
 import Loader from "../assets/loader.gif";
 
-const Login = ({ socket }) => {
+const Login = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
