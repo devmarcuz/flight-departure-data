@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "../css/Login.css";
 import axios from "axios";
 import { loginUserApi } from "../api/ApiRoutes";
-import Loading from "../components/loading";
+import Loader from "../assets/loader.gif";
 
 const Login = ({ socket }) => {
   const [formData, setFormData] = useState({
@@ -84,7 +84,11 @@ const Login = ({ socket }) => {
     <div className="container-login">
       <div className="form-container">
         <h1 className="logo">Flight Departures</h1>
-        {loading && <Loading />}
+        {loading && (
+          <div className="img">
+            <img src={Loader} alt="loader" className="loader-img" />
+          </div>
+        )}
 
         <form onSubmit={onSubmit}>
           <input
