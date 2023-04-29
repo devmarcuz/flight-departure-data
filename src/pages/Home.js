@@ -117,12 +117,14 @@ const Home = () => {
       <div className="container">
         <Table loading={loading} currentPosts={currentPosts} />
       </div>
-      <Pagination
-        postsPerPage={postsPerPage}
-        totalUsers={data.length}
-        paginate={paginate}
-        currentPage={currentPage}
-      />
+      {data.length > 1 && (
+        <Pagination
+          postsPerPage={postsPerPage}
+          totalUsers={data.length}
+          paginate={paginate}
+          currentPage={currentPage}
+        />
+      )}
     </main>
   );
 };
