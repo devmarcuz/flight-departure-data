@@ -4,7 +4,16 @@ This is a web application that displays real-time flight departure data of sever
 
 ## Demo Page
 
-A live demo of this application is available at [https://flight-departure-data-react.vercel.app/](https://flight-departure-data-react.vercel.app/)
+A live demo of this application is available at [https://flight-departure-data-react.vercel.app/](https://flight-departure-data-react.vercel.app/).
+
+## Accessibility
+
+To access the deployed application without registration, please use the following credentials:
+
+```environment
+Email: newuser@gmail.com
+Password: password123
+```
 
 ## Features
 
