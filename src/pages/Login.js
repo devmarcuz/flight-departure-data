@@ -7,15 +7,16 @@ import "../css/Login.css";
 import axios from "axios";
 import { loginUserApi } from "../api/ApiRoutes";
 import Loader from "../assets/loader.gif";
+import isEmail from "validator/lib/isEmail";
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    username: "",
+    email: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
 
-  const { username, password } = formData;
+  const { email, password } = formData;
 
   const navigate = useNavigate();
 
@@ -41,14 +42,17 @@ const Login = () => {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    if (isEmpty(username) || isEmpty(password)) {
+    if (isEmpty(email) || isEmpty(password)) {
       toast.error("All fields are required", toastOptions);
+      return false;
+    } else if (!isEmail(email)) {
+      toast.error("Enter a valid email", toastOptions);
       return false;
     } else {
       setLoading(true);
 
       axios
-        .post(loginUserApi, { username, password })
+        .post(loginUserApi, { email, password })
         .then((res) => {
           if (!res.data.status) {
             toast.error(res.data.msg, toastOptions);
@@ -60,7 +64,7 @@ const Login = () => {
             );
             navigate("/");
             setFormData({
-              username: "",
+              email: "",
               password: "",
             });
           }
@@ -92,11 +96,11 @@ const Login = () => {
 
         <form onSubmit={onSubmit}>
           <input
-            type="text"
-            placeholder="Username"
-            name="username"
+            type="email"
+            placeholder="Email"
+            name="email"
             onChange={handleChange}
-            value={username}
+            value={email}
           />
           <input
             type="password"
